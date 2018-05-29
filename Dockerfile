@@ -7,29 +7,23 @@ WORKDIR $APP_HOME
 # Add build layer for ruby dependencies
 COPY Gemfile $APP_HOME/
 COPY Gemfile.lock $APP_HOME/
-ENV GEM_HOME=/packages/ruby
-RUN gem install \
-    --no-ri --no-doc \
-    --clear-sources \
-    bundler
 ENV BINSTUBS_DIR=/packages/binstubs
 
 RUN set -x \
   && apt-get update -qq \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     build-essential \
-    ruby-dev \
     libpq-dev \
     postgresql-client \
-  && ${GEM_HOME}/bin/bundle install \
+  && bundle install \
     --binstubs ${BINSTUBS_DIR} \
   && DEBIAN_FRONTEND=noninteractive apt-get purge -y \
     build-essential \
   && DEBIAN_FRONTEND=noninteractive apt-get autoremove -y \
   && DEBIAN_FRONTEND=noninteractive apt-get clean -y
 
-ENV PATH=${BINSTUBS_DIR}:${GEM_HOME}/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-RUN ${GEM_HOME}/bin/bundle binstubs \
+ENV PATH=${BINSTUBS_DIR}:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+RUN bundle binstubs \
     bundler \
     --path ${BINSTUBS_DIR}
 
