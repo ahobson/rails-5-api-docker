@@ -3,8 +3,6 @@ version: '2.1'
 volumes:
   store:
     driver: local
-  bundle:
-    driver: local
 
 services:
   web:
@@ -13,7 +11,6 @@ services:
       - 3000:3000
     volumes:
       - .:/app
-      - bundle:/usr/local/bundle
     links:
       - db
     # Keep the stdin open, so we can attach to our app container's process and do things such as

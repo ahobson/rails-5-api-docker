@@ -4,7 +4,8 @@ module WardenHelper
   included do
     helper_method :warden, :current_user if respond_to?(:helper_method)
 
-    prepend_before_action :authenticate!
+    # Disable auth for demo reasons
+    # prepend_before_action :authenticate!
   end
 
   def current_user
